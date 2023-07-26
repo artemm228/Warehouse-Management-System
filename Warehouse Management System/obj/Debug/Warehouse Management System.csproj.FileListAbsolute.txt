@@ -1,0 +1,11 @@
+D:\VisualStudioC#_Save\Warehouse Management System\bin\Debug\Warehouse Management System.exe.config
+D:\VisualStudioC#_Save\Warehouse Management System\bin\Debug\Warehouse Management System.exe
+D:\VisualStudioC#_Save\Warehouse Management System\bin\Debug\Warehouse Management System.pdb
+D:\VisualStudioC#_Save\Warehouse Management System\obj\Debug\Warehouse Management System.csproj.AssemblyReference.cache
+D:\VisualStudioC#_Save\Warehouse Management System\obj\Debug\Warehouse Management System.csproj.SuggestedBindingRedirects.cache
+D:\VisualStudioC#_Save\Warehouse Management System\obj\Debug\Warehouse_Management_System.Properties.Resources.resources
+D:\VisualStudioC#_Save\Warehouse Management System\obj\Debug\Warehouse Management System.csproj.GenerateResource.cache
+D:\VisualStudioC#_Save\Warehouse Management System\obj\Debug\Warehouse Management System.csproj.CoreCompileInputs.cache
+D:\VisualStudioC#_Save\Warehouse Management System\obj\Debug\Warehouse Management System.exe
+D:\VisualStudioC#_Save\Warehouse Management System\obj\Debug\Warehouse Management System.pdb
+D:\VisualStudioC#_Save\Warehouse Management System\obj\Debug\Warehouse_Management_System.FormLogin.resources
