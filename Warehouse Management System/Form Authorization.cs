@@ -117,5 +117,12 @@ namespace Warehouse_Management_System
                 tbpassword.PasswordChar = '\0';
             }
         }
+
+        private void lbregister_Click(object sender, EventArgs e)
+        {
+            this.Hide();
+            Form_Registration registerForm = new Form_Registration();
+            registerForm.Show();
+        }
     }
 }

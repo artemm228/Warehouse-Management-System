@@ -1,0 +1,49 @@
+# Ignoring build files
+bin/
+obj/
+
+# Ignoring Visual Studio configuration files
+*.suo
+*.user
+*.vs/
+*.vssscc
+*_i.c
+*_p.c
+*.ncb
+*.sln.docstates
+*.sln.ide
+
+# Ignoring temporary files
+*.tmp
+*.bak
+*.cache
+
+# Ignoring log files and error reports
+*.log
+*.vspscc
+*.vssscc
+
+# Ignoring certificate files
+*.pfx
+*.pem
+
+# Ignoring compiler files Roslyn
+*.nuget.props
+*.nuget.targets
+
+# Ignoring style and theme files.
+Thumbs.db
+*.sw?
+
+# Ignore ReSharper files
+_ReSharper*/
+
+# Ignore NuGet Packages folder
+packages/
+
+# Ignore application settings file
+App.config.user
+
+# Ignore deployment files
+*.ClickOnce
+publish/

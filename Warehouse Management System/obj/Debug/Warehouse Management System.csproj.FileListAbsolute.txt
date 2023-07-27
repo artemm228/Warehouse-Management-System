@@ -9,3 +9,4 @@ D:\VisualStudioC#_Save\Warehouse Management System\obj\Debug\Warehouse Managemen
 D:\VisualStudioC#_Save\Warehouse Management System\obj\Debug\Warehouse Management System.exe
 D:\VisualStudioC#_Save\Warehouse Management System\obj\Debug\Warehouse Management System.pdb
 D:\VisualStudioC#_Save\Warehouse Management System\obj\Debug\Warehouse_Management_System.FormLogin.resources
+D:\VisualStudioC#_Save\Warehouse Management System\obj\Debug\Warehouse_Management_System.Form_Registration.resources
