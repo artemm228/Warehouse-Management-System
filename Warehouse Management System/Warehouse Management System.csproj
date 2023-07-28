@@ -52,6 +52,12 @@
     <Compile Include="Form Authorization.Designer.cs">
       <DependentUpon>Form Authorization.cs</DependentUpon>
     </Compile>
+    <Compile Include="Form Management.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form Management.Designer.cs">
+      <DependentUpon>Form Management.cs</DependentUpon>
+    </Compile>
     <Compile Include="Form Registration.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -62,6 +68,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Form Authorization.resx">
       <DependentUpon>Form Authorization.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form Management.resx">
+      <DependentUpon>Form Management.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form Registration.resx">
       <DependentUpon>Form Registration.cs</DependentUpon>
@@ -97,7 +106,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="images\hide.png" />
+    <Content Include="images\search.png" />
     <Content Include="images\show.png" />
+    <Content Include="images\warehouse.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

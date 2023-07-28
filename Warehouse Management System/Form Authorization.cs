@@ -70,7 +70,9 @@ namespace Warehouse_Management_System
                 MessageBox.Show("Error. Enter username");
             else
             {
-                // transition to a functional form
+                this.Hide();
+                Form_Management mainForm = new Form_Management();
+                mainForm.Show();
             }
 
             
