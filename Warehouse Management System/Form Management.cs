@@ -7,6 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Net.Sockets;
+using System.Windows;
 
 namespace Warehouse_Management_System
 {
@@ -37,6 +39,22 @@ namespace Warehouse_Management_System
         private void btnDelete_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private async void btnAdd_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Client_System client = new Client_System();
+                string[] response = await client.SendData("Add", tbName.Text, tbPrice.Text, rtbdescription.Text, numeric.Text);
+                string message = string.Join(Environment.NewLine, response);
+                
+                MessageBox.Show(message);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
     }
 }
