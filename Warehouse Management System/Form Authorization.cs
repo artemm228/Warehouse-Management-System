@@ -7,6 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Warehouse_Management_System;
+
 
 
 namespace Warehouse_Management_System
@@ -60,7 +62,7 @@ namespace Warehouse_Management_System
             Application.Exit();
         }
 
-        private void btnlogin_Click(object sender, EventArgs e)
+        private async void btnlogin_Click(object sender, EventArgs e)
         {
             if (tbusername.ForeColor == SystemColors.GrayText && tbpassword.ForeColor == SystemColors.GrayText)
                 MessageBox.Show("Error. Enter username and password");
@@ -70,12 +72,27 @@ namespace Warehouse_Management_System
                 MessageBox.Show("Error. Enter username");
             else
             {
-                this.Hide();
-                Form_Management mainForm = new Form_Management();
-                mainForm.Show();
-            }
+                string username = tbusername.Text;
+                string password = tbpassword.Text;
+                Client_System client = new Client_System();
 
-            
+                string[] response = await client.SendData("Login", username, password);
+
+                // check the response from the server and perform the corresponding actions
+                if (response.Length > 0 && response[0] == "Success")
+                {
+                    // The login and password are correct, we proceed to the form_management page
+                    this.Hide();
+                    Form_Management mainForm = new Form_Management();
+                    mainForm.Show();
+                }
+                else
+                {
+                    MessageBox.Show("Invalid username or password");
+                }
+
+            }
+    
         }
 
         private void tbusername_KeyPress(object sender, KeyPressEventArgs e)

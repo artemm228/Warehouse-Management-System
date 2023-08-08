@@ -19,7 +19,7 @@ namespace Warehouse_Management_System
         {
             InitializeComponent();
 
-
+            // The text color of the text field is set to gray color (placeholdertext)
             tbname.Text = "Name";
             tbname.Enter += tbname_Enter; tbname.Leave += tbname_Leave;
             tbname.ForeColor = SystemColors.GrayText;
@@ -36,17 +36,24 @@ namespace Warehouse_Management_System
             tbnewpassword.Enter += tbnewpassword_Enter; tbnewpassword.Leave += tbnewpassword_Leave;
             tbnewpassword.ForeColor = SystemColors.GrayText;
 
-
+            // Removing visible borders of the btnmask and btnsign buttons
             btnmask.FlatAppearance.BorderSize = 0;
-
             btnsign.FlatStyle = FlatStyle.Flat;
             btnsign.FlatAppearance.BorderSize = 0;
 
+            // centering the form upon its opening
             this.StartPosition = FormStartPosition.CenterScreen;
         }
 
-        private void btnsign_Click(object sender, EventArgs e)
+        private async void btnsign_Click(object sender, EventArgs e)
         {
+            // Getting values from form fields
+            string firstName = tbname.Text;
+            string lastName = tbsurname.Text;
+            string login = tbnewlogin.Text;
+            string password = tbnewpassword.Text;
+
+            // Check for empty fields
             if (tbname.ForeColor == SystemColors.GrayText && 
                 tbsurname.ForeColor == SystemColors.GrayText &&
                 tbnewlogin.ForeColor == SystemColors.GrayText &&
@@ -64,9 +71,27 @@ namespace Warehouse_Management_System
                 MessageBox.Show("Error. Enter password");
             else
             {
-                this.Close();
-                FormLogin loginForm = new FormLogin();
-                loginForm.Show();
+                Client_System client = new Client_System();
+                string[] response = await client.SendData("Registration", firstName, lastName, login, password, "1");
+
+                //  checking the response from the server
+                if (response.Length > 0 && response[0] == "Success")
+                {
+                    MessageBox.Show("Registration successful");
+
+                    // switching to a different form
+                    this.Hide();
+                    FormLogin loginForm = new FormLogin();
+                    loginForm.Show();
+                }
+                else if (response.Length > 0 && response[0] == "Duplicate")
+                {
+                    MessageBox.Show("Login already exists. Please choose a different login.");
+                }
+                else
+                {
+                    MessageBox.Show("Registration failed");
+                }
             }
         }
 
@@ -103,7 +128,7 @@ namespace Warehouse_Management_System
         }
 
 
-
+        // Prohibition of entering spaces
         private void tbname_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (e.KeyChar == ' ')
@@ -126,7 +151,7 @@ namespace Warehouse_Management_System
         }
 
 
-
+        // Changes the text and color of the text field upon entering and exiting the field
         private void tbname_Enter(object sender, EventArgs e)
         {
             if (tbname.Text == "Name")

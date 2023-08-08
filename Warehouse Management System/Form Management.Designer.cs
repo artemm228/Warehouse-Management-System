@@ -28,11 +28,20 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.listbproducts = new System.Windows.Forms.ListBox();
+            this.components = new System.ComponentModel.Container();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.dgv = new System.Windows.Forms.DataGridView();
+            this.idDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.nameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.descriptionDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.quantityOfGoodsDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.priceDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.itemBindingSource1 = new System.Windows.Forms.BindingSource(this.components);
+            this.stockDataDataSet1 = new Warehouse_Management_System.StockDataDataSet1();
             this.panel3 = new System.Windows.Forms.Panel();
             this.label5 = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.lbeuro = new System.Windows.Forms.Label();
             this.btnSearch = new System.Windows.Forms.Button();
             this.tbSearch = new System.Windows.Forms.TextBox();
             this.btnEdit = new System.Windows.Forms.Button();
@@ -49,34 +58,99 @@
             this.lbregister = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.itemTableAdapter1 = new Warehouse_Management_System.StockDataDataSet1TableAdapters.ItemTableAdapter();
             this.panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgv)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.itemBindingSource1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.stockDataDataSet1)).BeginInit();
             this.panel3.SuspendLayout();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numeric)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
-            // listbproducts
-            // 
-            this.listbproducts.FormattingEnabled = true;
-            this.listbproducts.Location = new System.Drawing.Point(14, 87);
-            this.listbproducts.Name = "listbproducts";
-            this.listbproducts.Size = new System.Drawing.Size(342, 277);
-            this.listbproducts.TabIndex = 0;
-            // 
             // panel1
             // 
             this.panel1.BackColor = System.Drawing.SystemColors.ScrollBar;
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel1.Controls.Add(this.dgv);
             this.panel1.Controls.Add(this.panel3);
             this.panel1.Controls.Add(this.panel2);
             this.panel1.Controls.Add(this.label1);
-            this.panel1.Controls.Add(this.listbproducts);
             this.panel1.Controls.Add(this.pictureBox1);
             this.panel1.Location = new System.Drawing.Point(-3, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(792, 397);
+            this.panel1.Size = new System.Drawing.Size(817, 397);
             this.panel1.TabIndex = 1;
+            // 
+            // dgv
+            // 
+            this.dgv.AutoGenerateColumns = false;
+            this.dgv.BackgroundColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.dgv.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgv.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.idDataGridViewTextBoxColumn,
+            this.nameDataGridViewTextBoxColumn,
+            this.descriptionDataGridViewTextBoxColumn,
+            this.quantityOfGoodsDataGridViewTextBoxColumn,
+            this.priceDataGridViewTextBoxColumn});
+            this.dgv.DataSource = this.itemBindingSource1;
+            this.dgv.Location = new System.Drawing.Point(32, 87);
+            this.dgv.Name = "dgv";
+            this.dgv.Size = new System.Drawing.Size(308, 276);
+            this.dgv.TabIndex = 13;
+            // 
+            // idDataGridViewTextBoxColumn
+            // 
+            this.idDataGridViewTextBoxColumn.DataPropertyName = "Id";
+            this.idDataGridViewTextBoxColumn.Frozen = true;
+            this.idDataGridViewTextBoxColumn.HeaderText = "Id";
+            this.idDataGridViewTextBoxColumn.Name = "idDataGridViewTextBoxColumn";
+            this.idDataGridViewTextBoxColumn.ReadOnly = true;
+            this.idDataGridViewTextBoxColumn.Width = 30;
+            // 
+            // nameDataGridViewTextBoxColumn
+            // 
+            this.nameDataGridViewTextBoxColumn.DataPropertyName = "Name";
+            this.nameDataGridViewTextBoxColumn.Frozen = true;
+            this.nameDataGridViewTextBoxColumn.HeaderText = "Name";
+            this.nameDataGridViewTextBoxColumn.Name = "nameDataGridViewTextBoxColumn";
+            this.nameDataGridViewTextBoxColumn.Width = 55;
+            // 
+            // descriptionDataGridViewTextBoxColumn
+            // 
+            this.descriptionDataGridViewTextBoxColumn.DataPropertyName = "Description";
+            this.descriptionDataGridViewTextBoxColumn.Frozen = true;
+            this.descriptionDataGridViewTextBoxColumn.HeaderText = "Description";
+            this.descriptionDataGridViewTextBoxColumn.Name = "descriptionDataGridViewTextBoxColumn";
+            this.descriptionDataGridViewTextBoxColumn.Width = 80;
+            // 
+            // quantityOfGoodsDataGridViewTextBoxColumn
+            // 
+            this.quantityOfGoodsDataGridViewTextBoxColumn.DataPropertyName = "QuantityOfGoods";
+            this.quantityOfGoodsDataGridViewTextBoxColumn.Frozen = true;
+            this.quantityOfGoodsDataGridViewTextBoxColumn.HeaderText = "Quantity";
+            this.quantityOfGoodsDataGridViewTextBoxColumn.Name = "quantityOfGoodsDataGridViewTextBoxColumn";
+            this.quantityOfGoodsDataGridViewTextBoxColumn.Width = 50;
+            // 
+            // priceDataGridViewTextBoxColumn
+            // 
+            this.priceDataGridViewTextBoxColumn.DataPropertyName = "Price";
+            this.priceDataGridViewTextBoxColumn.HeaderText = "Price";
+            this.priceDataGridViewTextBoxColumn.Name = "priceDataGridViewTextBoxColumn";
+            this.priceDataGridViewTextBoxColumn.ReadOnly = true;
+            this.priceDataGridViewTextBoxColumn.Width = 50;
+            // 
+            // itemBindingSource1
+            // 
+            this.itemBindingSource1.DataMember = "Item";
+            this.itemBindingSource1.DataSource = this.stockDataDataSet1;
+            // 
+            // stockDataDataSet1
+            // 
+            this.stockDataDataSet1.DataSetName = "StockDataDataSet1";
+            this.stockDataDataSet1.Locale = new System.Globalization.CultureInfo("");
+            this.stockDataDataSet1.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
             // 
             // panel3
             // 
@@ -84,7 +158,7 @@
             this.panel3.Controls.Add(this.label5);
             this.panel3.Location = new System.Drawing.Point(3, 0);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(792, 49);
+            this.panel3.Size = new System.Drawing.Size(813, 49);
             this.panel3.TabIndex = 11;
             // 
             // label5
@@ -103,6 +177,7 @@
             this.panel2.BackColor = System.Drawing.Color.RoyalBlue;
             this.panel2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel2.Controls.Add(this.btnSearch);
+            this.panel2.Controls.Add(this.lbeuro);
             this.panel2.Controls.Add(this.tbSearch);
             this.panel2.Controls.Add(this.btnEdit);
             this.panel2.Controls.Add(this.label6);
@@ -116,10 +191,21 @@
             this.panel2.Controls.Add(this.label2);
             this.panel2.Controls.Add(this.tbName);
             this.panel2.Controls.Add(this.lbregister);
-            this.panel2.Location = new System.Drawing.Point(464, 87);
+            this.panel2.Location = new System.Drawing.Point(471, 87);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(305, 276);
             this.panel2.TabIndex = 10;
+            // 
+            // lbeuro
+            // 
+            this.lbeuro.AutoSize = true;
+            this.lbeuro.BackColor = System.Drawing.SystemColors.Window;
+            this.lbeuro.Font = new System.Drawing.Font("Adobe Fan Heiti Std B", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbeuro.Location = new System.Drawing.Point(270, 54);
+            this.lbeuro.Name = "lbeuro";
+            this.lbeuro.Size = new System.Drawing.Size(14, 16);
+            this.lbeuro.TabIndex = 14;
+            this.lbeuro.Text = "€";
             // 
             // btnSearch
             // 
@@ -128,11 +214,12 @@
             this.btnSearch.Font = new System.Drawing.Font("Adobe Fan Heiti Std B", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnSearch.ForeColor = System.Drawing.SystemColors.Control;
             this.btnSearch.Image = global::Warehouse_Management_System.Properties.Resources.search;
-            this.btnSearch.Location = new System.Drawing.Point(226, 241);
+            this.btnSearch.Location = new System.Drawing.Point(225, 239);
             this.btnSearch.Name = "btnSearch";
-            this.btnSearch.Size = new System.Drawing.Size(43, 27);
+            this.btnSearch.Size = new System.Drawing.Size(45, 31);
             this.btnSearch.TabIndex = 19;
             this.btnSearch.UseVisualStyleBackColor = false;
+            this.btnSearch.Click += new System.EventHandler(this.btnSearch_Click);
             // 
             // tbSearch
             // 
@@ -154,6 +241,7 @@
             this.btnEdit.TabIndex = 18;
             this.btnEdit.Text = "Edit";
             this.btnEdit.UseVisualStyleBackColor = false;
+            this.btnEdit.Click += new System.EventHandler(this.btnEdit_Click);
             // 
             // label6
             // 
@@ -231,6 +319,7 @@
             // rtbdescription
             // 
             this.rtbdescription.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.rtbdescription.Font = new System.Drawing.Font("Adobe Fan Heiti Std B", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.rtbdescription.Location = new System.Drawing.Point(145, 90);
             this.rtbdescription.Name = "rtbdescription";
             this.rtbdescription.Size = new System.Drawing.Size(143, 41);
@@ -239,8 +328,10 @@
             // 
             // tbPrice
             // 
+            this.tbPrice.Font = new System.Drawing.Font("Adobe Fan Heiti Std B", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.tbPrice.Location = new System.Drawing.Point(160, 52);
             this.tbPrice.MaxLength = 20;
+            this.tbPrice.Multiline = true;
             this.tbPrice.Name = "tbPrice";
             this.tbPrice.Size = new System.Drawing.Size(128, 20);
             this.tbPrice.TabIndex = 11;
@@ -259,8 +350,10 @@
             // 
             // tbName
             // 
+            this.tbName.Font = new System.Drawing.Font("MS Reference Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.tbName.Location = new System.Drawing.Point(94, 17);
             this.tbName.MaxLength = 20;
+            this.tbName.Multiline = true;
             this.tbName.Name = "tbName";
             this.tbName.Size = new System.Drawing.Size(128, 20);
             this.tbName.TabIndex = 9;
@@ -288,25 +381,33 @@
             // pictureBox1
             // 
             this.pictureBox1.Image = global::Warehouse_Management_System.Properties.Resources.warehouse;
-            this.pictureBox1.Location = new System.Drawing.Point(365, 64);
+            this.pictureBox1.Location = new System.Drawing.Point(364, 64);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(93, 75);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox1.TabIndex = 12;
             this.pictureBox1.TabStop = false;
             // 
+            // itemTableAdapter1
+            // 
+            this.itemTableAdapter1.ClearBeforeFill = true;
+            // 
             // Form_Management
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(789, 397);
+            this.ClientSize = new System.Drawing.Size(810, 397);
             this.Controls.Add(this.panel1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
             this.Name = "Form_Management";
             this.Text = "Form_Management";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Form_Management_FormClosed);
+            this.Load += new System.EventHandler(this.Form_Management_Load);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgv)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.itemBindingSource1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.stockDataDataSet1)).EndInit();
             this.panel3.ResumeLayout(false);
             this.panel3.PerformLayout();
             this.panel2.ResumeLayout(false);
@@ -318,8 +419,6 @@
         }
 
         #endregion
-
-        private System.Windows.Forms.ListBox listbproducts;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Panel panel2;
@@ -340,5 +439,17 @@
         private System.Windows.Forms.TextBox tbSearch;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.DataGridView dgv;
+        
+        private System.Windows.Forms.DataGridViewTextBoxColumn typeIdDataGridViewTextBoxColumn;
+        private StockDataDataSet1 stockDataDataSet1;
+        private System.Windows.Forms.BindingSource itemBindingSource1;
+        private StockDataDataSet1TableAdapters.ItemTableAdapter itemTableAdapter1;
+        private System.Windows.Forms.Label lbeuro;
+        private System.Windows.Forms.DataGridViewTextBoxColumn idDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn nameDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn descriptionDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn quantityOfGoodsDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn priceDataGridViewTextBoxColumn;
     }
 }

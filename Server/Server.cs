@@ -8,14 +8,15 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System.IO;
+using System.Data.SqlClient;
+using System.Data;
 
 namespace Server
 {
-    internal class Server
+    public class Server
     {
         private TcpListener listener;
         private bool isRunning;
-
         static string connectionString;
 
         static void Main(string[] args)
@@ -29,17 +30,148 @@ namespace Server
 
 
             Server server = new Server();
-            server.Start();
-
-            Console.ReadLine();
-
-            server.Stop();
+            Task.Run(() => server.AcceptClients()).Wait();
         }
 
-        public Server()
+        public async Task<string[]> ProcessLogin(string username, string password)
         {
-            // It listens for incoming connections on a local address and port
-            listener = new TcpListener(IPAddress.Loopback, 1234);
+            string[] response;
+
+            try
+            {
+                // Checking for the presence of a user in the database
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    await connection.OpenAsync();
+                    string query = "SELECT COUNT(1) FROM Users WHERE [Login] = @Username AND [Password] = @Password";
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@Username", username);
+                        command.Parameters.AddWithValue("@Password", password);
+
+                        int result = (int)await command.ExecuteScalarAsync();
+
+                        if (result == 1)
+                        {
+                            response = new string[] { "Success" };
+                        }
+                        else
+                        {
+                            response = new string[] { "Invalid" };
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                response = new string[] { "Error", ex.Message };
+            }
+
+            return response;
+        }
+
+        private async Task<string[]> ProcessRegistration(string firstName, string lastName, string login, string password, int isroot)
+        {
+            string[] response;
+
+            try
+            {  
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    await connection.OpenAsync();
+
+                    // Checking if a user with such a login already exists.
+                    string checkQuery = "SELECT COUNT(1) FROM Users WHERE [Login] = @Login";
+                    using (SqlCommand checkCommand = new SqlCommand(checkQuery, connection))
+                    {
+                        checkCommand.Parameters.AddWithValue("@Login", login);
+
+                        int count = (int)await checkCommand.ExecuteScalarAsync();
+
+                        // If a user with such a username already exists, return an error
+                        if (count > 0)
+                        {
+                            response = new string[] { "Duplicate" };
+                            return response;
+                        }
+                    }
+
+                    // Adding a new user to the database
+                    string insertQuery = @"INSERT INTO Users ([Login], [Password], [FirstName], [LastName], [isRoot]) 
+                                          VALUES (@Login, @Password, @FirstName, @LastName, @isRoot)";
+
+                    using (SqlCommand insertCommand = new SqlCommand(insertQuery, connection))
+                    {
+                        insertCommand.Parameters.AddWithValue("@Login", login);
+                        insertCommand.Parameters.AddWithValue("@Password", password);
+                        insertCommand.Parameters.AddWithValue("@FirstName", firstName);
+                        insertCommand.Parameters.AddWithValue("@LastName", lastName);
+                        insertCommand.Parameters.AddWithValue("@isRoot", isroot);
+
+                        int rowsAffected = await insertCommand.ExecuteNonQueryAsync();
+
+                        if (rowsAffected > 0)
+                        {
+                            response = new string[] { "Success" };
+                        }
+                        else
+                        {
+                            response = new string[] { "Failed" };
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                response = new string[] { "Error", ex.Message };
+            }
+
+            return response;
+        }
+
+        private async Task<string[]> ProcessSearchByName(string search)
+        {
+            string[] response;
+
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    await connection.OpenAsync();
+
+                    // Adding a new user to the database
+                    string query = "SELECT [Name], [Description], [QuantityOfGoods], [Price] FROM Item WHERE [Name] LIKE '%' + @Search + '%'";
+
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@Search", search);
+
+                        using (SqlDataReader reader = await command.ExecuteReaderAsync())
+                        {
+                            var results = new List<string>();
+
+                            while (reader.Read())
+                            {
+                                string name = reader.GetString(0);
+                                string description = reader.GetString(1);
+                                int quantity = reader.GetInt32(2);
+                                decimal price = reader.GetDecimal(3);
+
+                                string result = $"Name: {name}, Description: {description}, Quantity: {quantity}, Price: {price}";
+                                results.Add(result);
+                            }
+
+                            response = results.ToArray();
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                response = new string[] { "Error", ex.Message };
+            }
+
+            return response;
         }
 
         private async Task ProcessClient(TcpClient client)
@@ -86,56 +218,182 @@ namespace Server
             string[] args = new string[requestParts.Length - 1];
             Array.Copy(requestParts, 1, args, 0, args.Length);
 
-            // Interaction with the database
-            var optionsBuilder = new DbContextOptionsBuilder<ServerDbContext>();
-            optionsBuilder.UseSqlServer(connectionString);
-
-            using (var dbContext = new ServerDbContext(optionsBuilder.Options))
-                if (action == "Add")
-                {
-                    // The logic of adding a record to the database
-
-                    await dbContext.SaveChangesAsync();
-                    return new string[] { "Success" };
-                }
-                else if (action == "Edit")
-                {
-                    // The logic of editing a record in a database.
-
-                    await dbContext.SaveChangesAsync();
-                    return new string[] { "Success" };
-                }
-                else if (action == "Delete")
-                {
-                    // The logic of deleting a record from a database.
-
-                    await dbContext.SaveChangesAsync();
-                    return new string[] { "Success!" };
-                }
-                else
-                {
-                    return new string[] { "Invalid action" };
-                }
-        }
-
-        public void Start()
-        {
-            isRunning = true;
-            listener.Start(); // starts listening for incoming connections
-            Console.WriteLine("Server started");
-
-            while (isRunning)
+            if (action == "Add")
             {
-                var client = listener.AcceptTcpClient(); // The client connection is expected.
-                _ = ProcessClient(client); // The connected client is saved in the variable 'client'
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    await connection.OpenAsync();
+                    string addquery = $@"INSERT INTO Item (Name, Description, QuantityOfGoods, Price) VALUES (@Name, @Description, @QuantityOfGoods, @Price)";
+                    using (SqlCommand command = new SqlCommand(addquery, connection))
+                    {
+                        command.Parameters.AddWithValue("@Name", args[0]);
+                        command.Parameters.AddWithValue("@Description", args[1]);
+                        command.Parameters.AddWithValue("@QuantityOfGoods", int.Parse(args[2]));
+                        command.Parameters.AddWithValue("@Price", decimal.Parse(args[3]));
+
+                        int rowsAffected = await command.ExecuteNonQueryAsync();
+
+                        if (rowsAffected > 0)
+                            return new string[] { "Insert successful!" };
+                        else
+                            return new string[] { "Insert failed" };
+                    }
+                }
+            }
+            else if (action == "Edit")
+            {
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    await connection.OpenAsync();
+
+                    string updateQuery = "UPDATE Item SET ";
+                    bool hasUpdate = false;
+
+                    if (!string.IsNullOrWhiteSpace(args[1]))
+                    {
+                        updateQuery += "Description = @NewDescription, ";
+                        hasUpdate = true;
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(args[2]) && int.TryParse(args[2], out int newQuantity))
+                    {
+                        updateQuery += "QuantityOfGoods = @NewQuantity, ";
+                        hasUpdate = true;
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(args[3]) && decimal.TryParse(args[3], out decimal newPrice))
+                    {
+                        updateQuery += "Price = @NewPrice, ";
+                        hasUpdate = true;
+                    }
+
+                    if (!hasUpdate)
+                    {
+                        return new string[] { "No fields to update." };
+                    }
+
+                    updateQuery = updateQuery.Remove(updateQuery.Length - 2);
+
+                    updateQuery += " WHERE Name = @Name";
+
+                    using (SqlCommand command = new SqlCommand(updateQuery, connection))
+                    {
+                        command.Parameters.AddWithValue("@Name", args[0]);
+
+                        if (!string.IsNullOrWhiteSpace(args[1]))
+                        {
+                            command.Parameters.AddWithValue("@NewDescription", args[1]);
+                        }
+
+                        if (!string.IsNullOrWhiteSpace(args[2]) && int.TryParse(args[2], out int newQuantityParsed))
+                        {
+                            command.Parameters.AddWithValue("@NewQuantity", newQuantityParsed);
+                        }
+
+                        if (!string.IsNullOrWhiteSpace(args[3]) && decimal.TryParse(args[3], out decimal newPriceParsed))
+                        {
+                            command.Parameters.AddWithValue("@NewPrice", newPriceParsed);
+                        }
+
+                        int rowsAffected = await command.ExecuteNonQueryAsync();
+
+                        if (rowsAffected > 0)
+                        {
+                            return new string[] { "Update successful!" };
+                        }
+                        else
+                        {
+                            return new string[] { "No rows updated" };
+                        }
+                    }
+                }
+            }
+            else if (action == "Delete")
+            {
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    await connection.OpenAsync();
+                    string deletequery = "DELETE FROM Item WHERE Name = @Name";
+                    using (SqlCommand command = new SqlCommand(deletequery, connection))
+                    {
+                        command.Parameters.AddWithValue("@Name", args[0]);
+
+                        int rowsAffected = await command.ExecuteNonQueryAsync();
+
+                        if (rowsAffected > 0)
+                            return new string[] { "Delete Success!" };
+                        else
+                            return new string[] { "No rows deleted" };
+
+                    }
+                }
+            }
+            else if (action == "Login")
+            {
+                    // Get the login and password from the arguments
+                    string username = args[0];
+                    string password = args[1];
+
+                    // pass the login and password to the processlogin method for verification
+                    return await ProcessLogin(username, password);
+            }
+            else if (action == "Registration")
+            {
+                //  obtain registration data from the arguments
+                string firstName = args[0];
+                string lastName = args[1];
+                string login = args[2];
+                string password = args[3];
+                string isroot = args[4];
+
+                // call a method for processing registration and receiving a response
+                return await ProcessRegistration(firstName, lastName, login, password, int.Parse(isroot));
+            }
+            else if (action == "Search")
+            {
+                string search = args[0];
+
+                return await ProcessSearchByName(search);
+            }
+            else
+            {
+                return new string[] { "Invalid action" };
             }
         }
 
-        public void Stop()
+        public async Task AcceptClients()
         {
-            isRunning = false;
-            listener.Stop(); // it stops accepting new connections
-            Console.WriteLine("Server stopped.");
+            isRunning = true;
+            listener = new TcpListener(IPAddress.Loopback, 1234);
+
+            try
+            {
+                listener.Start();
+                Console.WriteLine("Server started. Listening for incoming connections...");
+
+                while (isRunning)
+                {
+                    try
+                    {
+                        TcpClient client = await listener.AcceptTcpClientAsync();
+                        Console.WriteLine("New client connected.");
+
+                        // Process each client connection in a separate thread
+                        _ = Task.Run(() => ProcessClient(client));
+                    }
+                    catch (Exception ex)
+                    {
+                        // Handling an error when accepting a client
+                        Console.WriteLine($"Error accepting client: {ex.Message}");   
+                    }
+                }
+            }
+            finally
+            {
+                listener.Stop();
+                Console.WriteLine("Server stopped.");
+                isRunning = false;
+            }
         }
     }
 }
